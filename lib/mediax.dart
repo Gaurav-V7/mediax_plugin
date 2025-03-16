@@ -7,7 +7,7 @@ import 'package:mediax/models/video_size.dart';
 import 'package:uuid/uuid.dart';
 
 import 'consts/consts.dart';
-import 'models/DataSource.dart';
+import 'models/data_source.dart';
 
 class MediaX {
   late MethodChannel channel;

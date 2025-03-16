@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mediax/mediax.dart';
-import 'package:mediax/models/DataSource.dart';
+import 'package:mediax/models/data_source.dart';
 import 'package:mediax/views/player_view.dart';
 
 void main() {

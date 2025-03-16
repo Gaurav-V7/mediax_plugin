@@ -9,11 +9,13 @@ class LandscapeLayout extends StatelessWidget {
     // Enter full-screen mode
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) return;
+
         // Restore normal mode when exiting landscape
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-        return true;
       },
       child: Container(
         color: Colors.black54,

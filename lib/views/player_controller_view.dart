@@ -42,7 +42,7 @@ class PlayerControllerViewState extends State<PlayerControllerView> {
   Timer? _hideTimer;
   bool _isControllerInFocus = false;
   double _lastSeekPosition = 0.0;
-  bool _isShowingRemainingDuration = false;
+  // bool _isShowingRemainingDuration = false;
 
   @override
   void initState() {
@@ -164,16 +164,6 @@ class PlayerControllerViewState extends State<PlayerControllerView> {
 
   void _handleSliderChange(double val) {
     seekbarPosition.value = val;
-  }
-
-  void _handleSeek(int offset) async {
-    var newPos = playerController.position.value.toDouble() + offset;
-    if (offset < 0 && newPos < 0) {
-      newPos = 0;
-    } else if (offset > 0 && newPos > playerController.duration.value) {
-      newPos = playerController.duration.value.toDouble();
-    }
-    instantSeek(newPos);
   }
 
   double getAdjustedSeekbarPosition(double position) {
