@@ -2,6 +2,10 @@
 
 A flutter plugin for Android and iOS for media playback either Audio or Video.
 
+**Android**: The plugin leverages ExoPlayer, a powerful and flexible media player for Android, to handle media playback.
+
+**iOS**: The plugin uses AVPlayer, Apple's native media player, to deliver smooth and efficient media playback on iOS devices.
+
 ## Internet Permission Access
 
 To enable network file/stream playback, you need to follow the requirements below:
