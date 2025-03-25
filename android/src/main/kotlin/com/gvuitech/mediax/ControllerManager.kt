@@ -13,6 +13,13 @@ object ControllerManager {
         return controllers[controllerId]
     }
 
+    fun releaseAllControllers() {
+        controllers.forEach {
+            it.value.releasePlayer()
+        }
+        controllers.clear()
+    }
+
     fun createController(
         controllerId: String,
         flutterEngine: FlutterEngine,

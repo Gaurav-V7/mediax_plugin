@@ -415,6 +415,12 @@ class PlayerController: NSObject {
     }
     
     func releasePlayer() {
+        methodChannel.setMethodCallHandler(nil)
+        player?.pause()
+        
+        player?.currentItem?.cancelPendingSeeks()
+        player?.currentItem?.asset.cancelLoading()
+        
         if let timeObserverToken = timeObserverToken {
             _player?.removeTimeObserver(timeObserverToken)
         }

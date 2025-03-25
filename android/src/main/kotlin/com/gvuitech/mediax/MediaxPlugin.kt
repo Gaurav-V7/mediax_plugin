@@ -71,7 +71,15 @@ class MediaxPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   }
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-    channel.setMethodCallHandler(null)
+    if (::channel.isInitialized) {
+      channel.setMethodCallHandler(null)
+    }
+
+    ControllerManager.releaseAllControllers()
+
+    if (::flutterPluginBinding.isInitialized) {
+      flutterPluginBinding = binding
+    }
   }
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
