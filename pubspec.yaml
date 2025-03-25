@@ -1,6 +1,6 @@
 name: mediax
 description: "Flutter plugin for playing Audio or Video content on Android and iOS."
-version: 0.0.2
+version: 0.0.3
 repository: https://github.com/Gaurav-V7/mediax_plugin
 homepage: https://github.com/Gaurav-V7/mediax_plugin#readme
 
