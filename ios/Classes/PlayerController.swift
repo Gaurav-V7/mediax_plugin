@@ -223,6 +223,10 @@ class PlayerController: NSObject {
             case Constants.STOP:
                 self.stop()
                 result(nil)
+
+            case Constants.RELEASE_PLAYER:
+                self.releasePlayer()
+                result(nil)
                 
             case Constants.SEEK_TO:
                 if let position = call.arguments as? Int {

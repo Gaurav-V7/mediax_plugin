@@ -1,4 +1,6 @@
+/// Strings
 class Strings {
+  /// Error strings
   static final errors = _Errors();
 }
 

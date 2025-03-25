@@ -24,7 +24,7 @@ class _MyAppState extends State<MyApp> {
   final GlobalKey<PlayerViewState> playerViewKey = GlobalKey();
 
   final dropDownItems = ["Network", "Local File", "Asset"];
-  String? currentMode = "Network";
+  String? currentMode = "Asset";
 
   TextEditingController networkUrlTextController = TextEditingController();
 
@@ -40,8 +40,10 @@ class _MyAppState extends State<MyApp> {
     ]);
 
     controller = MediaX.init(
-        enableMediaSession: true,
-        dataSource: DataSource.network(networkUrlTextController.text));
+      enableMediaSession: true,
+      dataSource: DataSource.network(
+          "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8"),
+    );
     playerView = PlayerView(
       key: playerViewKey,
       controller: controller,
@@ -49,28 +51,28 @@ class _MyAppState extends State<MyApp> {
     );
 
     controller.isInitialized.listen((isInitialized) {
-      print('initializationChanged: $isInitialized');
+      debugPrint('initializationChanged: $isInitialized');
       if (isInitialized) {}
     });
 
     controller.videoSize.listen((videoSize) {
-      print('videoSize: ${videoSize.width} ${videoSize.height}');
+      debugPrint('videoSize: ${videoSize.width} ${videoSize.height}');
     });
 
     controller.aspectRatio.listen((ar) {
-      print('aspectRatio: $aspectRatio');
+      debugPrint('aspectRatio: $aspectRatio');
       if (ar > 1.333) {
         aspectRatio.value = ar;
       }
     });
 
     controller.playbackState.listen((state) {
-      print('playbackState: ${state.name}');
+      debugPrint('playbackState: ${state.name}');
     });
 
     controller.playbackError.listen((error) {
       if (error != null) {
-        print(error.toString());
+        debugPrint(error.toString());
         showToast(error.message);
       }
     });

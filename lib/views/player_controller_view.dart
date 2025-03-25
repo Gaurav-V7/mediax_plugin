@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs
+
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
@@ -115,7 +117,7 @@ class PlayerControllerViewState extends State<PlayerControllerView> {
             thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
             overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
             inactiveTrackColor: AppColors.seekbar.inactiveTrackColor,
-            secondaryActiveTrackColor: AppColors.seekbar.bufferingTrackColor,
+            secondaryActiveTrackColor: AppColors.seekbar.bufferedTrackColor,
           ),
           child: Slider(
             min: 0.0,
@@ -174,19 +176,6 @@ class PlayerControllerViewState extends State<PlayerControllerView> {
 
     // Return the valid position
     return position;
-  }
-
-  void instantSeek(double finalPos) {
-    print('instantSeek: $finalPos');
-    playerController.pause();
-    setState(() {
-      playerController.position.value = finalPos.toInt();
-      seekbarPosition.value = playerController.position.value.toDouble();
-    });
-    debouncer.run(() async {
-      await playerController.seekTo(finalPos);
-      playerController.play();
-    });
   }
 
   @override

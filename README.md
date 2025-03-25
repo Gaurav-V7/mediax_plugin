@@ -164,6 +164,18 @@ controller.playbackState.listen((state) {
 });
 ```
 
+### Dispose the MediaX controller
+
+To release the resources used by the MediaX controller
+
+```dart
+@override
+void dispose() {
+  controller.dispose();
+  super.dispose();
+}
+```
+
 ### Enable MediaSession
 
 Control playback from Earphones/Headphones buttons like Play/Pause by default it is set to false

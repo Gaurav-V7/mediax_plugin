@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mediax/consts/sizes.dart';
 
+/// A custom [SliderTrackShape] for the seekbar.
+///
+/// Overrides the preferred rect to center the track vertically and
+/// horizontally within the parent box.
 class SeekbarTrackShape extends RoundedRectSliderTrackShape {
   @override
   Rect getPreferredRect({

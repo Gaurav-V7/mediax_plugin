@@ -1,7 +1,15 @@
+/// Sizes
 class Sizes {
+  /// Spacing sizes
   static final spacing = _Spacing();
+
+  /// Icon sizes
   static final icon = _Icon();
+
+  /// Text sizes
   static final text = _Text();
+
+  /// Seekbar sizes
   static final seekbar = _Seekbar();
 }
 
