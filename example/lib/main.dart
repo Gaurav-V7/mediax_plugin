@@ -19,6 +19,23 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    return const GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: VideoPlayerScreen(),
+    );
+  }
+}
+
+class VideoPlayerScreen extends StatefulWidget {
+  const VideoPlayerScreen({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _VideoPlayerScreenState();
+}
+
+class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   late MediaX controller;
   late PlayerView playerView;
   final GlobalKey<PlayerViewState> playerViewKey = GlobalKey();
@@ -38,7 +55,6 @@ class _MyAppState extends State<MyApp> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight
     ]);
-
     controller = MediaX.init(
       enableMediaSession: true,
       dataSource: DataSource.network(
@@ -79,96 +95,93 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Obx(
-      () => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          body: mainView(),
-        ),
-      ),
-    );
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
-  Widget mainView() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Visibility(
-            visible: !controller.isFullScreen.value,
-            child: AppBar(
-              title: const Text('MediaX example app'),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Visibility(
+              visible: !controller.isFullScreen.value,
+              child: AppBar(
+                title: const Text('MediaX example app'),
+              ),
             ),
-          ),
-          Visibility(
-            visible: !controller.isFullScreen.value,
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                DropdownButton<String>(
-                    value: currentMode,
-                    items: dropDownItems.map((item) {
-                      return DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(item),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        currentMode = newValue;
-                      });
-                      if (currentMode == "Asset") {
-                        controller.setMediaItem(
-                            dataSource: DataSource.asset("assets/demo.mp4"));
-                      }
-                    }),
-                Visibility(
-                  visible: currentMode == "Network",
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: TextField(
-                            onSubmitted: (value) => setMediaItem(value),
-                            controller: networkUrlTextController,
+            Visibility(
+              visible: !controller.isFullScreen.value,
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  DropdownButton<String>(
+                      value: currentMode,
+                      items: dropDownItems.map((item) {
+                        return DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(item),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          currentMode = newValue;
+                        });
+                        if (currentMode == "Asset") {
+                          controller.setMediaItem(
+                              dataSource: DataSource.asset("assets/demo.mp4"));
+                        }
+                      }),
+                  Visibility(
+                    visible: currentMode == "Network",
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: TextField(
+                              onSubmitted: (value) => setMediaItem(value),
+                              controller: networkUrlTextController,
+                            ),
                           ),
-                        ),
-                        IconButton(
-                            onPressed: () => setMediaItem(
-                                networkUrlTextController.text
-                                    .toString()
-                                    .trim()),
-                            icon: const Icon(Icons.play_arrow_rounded))
-                      ],
+                          IconButton(
+                              onPressed: () => setMediaItem(
+                                  networkUrlTextController.text
+                                      .toString()
+                                      .trim()),
+                              icon: const Icon(Icons.play_arrow_rounded))
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Visibility(
-                  visible: currentMode == "Local File",
-                  child: ElevatedButton(
-                      onPressed: () async {
-                        final picker = await ImagePicker()
-                            .pickVideo(source: ImageSource.gallery);
+                  Visibility(
+                    visible: currentMode == "Local File",
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          final picker = await ImagePicker()
+                              .pickVideo(source: ImageSource.gallery);
 
-                        if (picker != null) {
-                          controller.setMediaItem(
-                              dataSource: DataSource.file(picker.path),
-                              autoplay: false);
-                        }
-                      },
-                      child: const Text("Pick file")),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-              ],
+                          if (picker != null) {
+                            controller.setMediaItem(
+                                dataSource: DataSource.file(picker.path),
+                                autoplay: false);
+                          }
+                        },
+                        child: const Text("Pick file")),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                ],
+              ),
             ),
-          ),
-          frameLayout(child: playerView),
-        ],
+            frameLayout(child: playerView),
+          ],
+        ),
       ),
     );
   }

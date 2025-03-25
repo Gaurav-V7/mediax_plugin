@@ -126,6 +126,8 @@ class PlayerController(
     }
 
     fun releasePlayer() {
+        handler.removeCallbacksAndMessages(null)
+        methodChannel.setMethodCallHandler(null)
         player?.release()
         mediaSession?.release()
         mediaSession = null
