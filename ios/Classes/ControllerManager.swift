@@ -15,6 +15,13 @@ class ControllerManager {
         return controllers[controllerId]
     }
     
+    static func releaseAllControllers() {
+        for (_, controller) in controllers {
+            controller.releasePlayer()
+        }
+        controllers.removeAll()
+    }
+    
     static func createController(
         controllerId: String,
         flutterEngine: FlutterEngine,

@@ -59,4 +59,8 @@ public class MediaxPlugin: NSObject, FlutterPlugin {
             result(FlutterMethodNotImplemented)
         }
     }
+    
+    public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+        ControllerManager.releaseAllControllers()
+    }
 }

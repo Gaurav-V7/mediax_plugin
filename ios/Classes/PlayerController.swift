@@ -415,6 +415,7 @@ class PlayerController: NSObject {
     }
     
     func releasePlayer() {
+        methodChannel.setMethodCallHandler(nil)
         player?.pause()
         
         player?.currentItem?.cancelPendingSeeks()

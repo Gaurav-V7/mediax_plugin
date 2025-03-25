@@ -41,7 +41,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   final GlobalKey<PlayerViewState> playerViewKey = GlobalKey();
 
   final dropDownItems = ["Network", "Local File", "Asset"];
-  String? currentMode = "Asset";
+  String? currentMode = "Network";
+  String sampleStreamUrl =
+      "https://html5demos.com/assets/dizzy.mp4";
 
   TextEditingController networkUrlTextController = TextEditingController();
 
@@ -57,14 +59,15 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     ]);
     controller = MediaX.init(
       enableMediaSession: true,
-      dataSource: DataSource.network(
-          "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8"),
+      dataSource: DataSource.network(sampleStreamUrl),
     );
     playerView = PlayerView(
       key: playerViewKey,
       controller: controller,
       awakeScreenWhilePlaying: true,
     );
+
+    networkUrlTextController.text = sampleStreamUrl;
 
     controller.isInitialized.listen((isInitialized) {
       debugPrint('initializationChanged: $isInitialized');
