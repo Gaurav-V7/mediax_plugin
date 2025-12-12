@@ -17,7 +17,7 @@ public class MediaxPlugin: NSObject, FlutterPlugin {
         // Register the view factory with correct view type identifier
         let messenger = registrar.messenger()
         let flutterEngine = (UIApplication.shared.delegate as? FlutterAppDelegate)?.window?.rootViewController as? FlutterViewController
-        let factory = PlayerViewFactory(flutterEngine: flutterEngine!.engine!)
+        let factory = PlayerViewFactory(flutterEngine: flutterEngine!.engine)
         registrar.register(factory, withId: Constants.VIDEO_VIEW)
         
     }
@@ -42,7 +42,7 @@ public class MediaxPlugin: NSObject, FlutterPlugin {
                         // Assuming the arguments contains necessary parameters like dataSource, autoplay, etc.
                         try ControllerManager.createController(
                             controllerId: controllerId,
-                            flutterEngine: (flutterEngine?.engine!)!,
+                            flutterEngine: (flutterEngine?.engine)!,
                             context: flutterEngine,
                             activity: flutterEngine,
                             params: arguments,

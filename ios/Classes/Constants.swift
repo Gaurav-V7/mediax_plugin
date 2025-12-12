@@ -1,12 +1,4 @@
-//
-//  Constants.swift
-//  Pods
-//
-//  Created by AI Alpha Tech on 18/02/25.
-//
-
-struct Constants {
-    
+enum Constants {
     static let MEDIAX = "mediax"
     static let MEDIAX_VIEW = "mediax:view"
     static let VIDEO_VIEW = "video_view"
