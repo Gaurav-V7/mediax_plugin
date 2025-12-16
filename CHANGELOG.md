@@ -12,3 +12,7 @@
 - Refactored structure of the main.dart for better performance
 - iOS AVPlayer releasePlayer fixes
 - Fixed Detached from Flutter Engine Issue
+
+## 0.0.4
+
+- Fixed the error causing to build the app
