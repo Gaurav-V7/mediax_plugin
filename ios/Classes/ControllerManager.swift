@@ -1,10 +1,3 @@
-//
-//  ControllerManager.swift
-//  Pods
-//
-//  Created by AI Alpha Tech on 31/01/25.
-//
-
 import AVFoundation
 import Flutter
 
