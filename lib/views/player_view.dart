@@ -277,8 +277,9 @@ class PlayerViewState extends State<PlayerView> {
     isControllerVisible.value = !isControllerVisible.value;
   }
 
-  /// Toggle native fullscreen on macOS.
+  /// Toggle native fullscreen. Only supported on macOS.
   Future<void> toggleFullscreen() async {
+    if (!Platform.isMacOS) return;
     await _methodChannel.invokeMethod('toggleFullscreen');
   }
 }

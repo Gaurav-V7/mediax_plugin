@@ -202,7 +202,7 @@ class PlayerController(
                 methodChannel.invokeMethod(Constants.IS_PLAYING, isPlaying)
                 if (isPlaying) {
                     startPositionUpdates()
-                } else {
+                } else if (player?.playbackState != Player.STATE_BUFFERING) {
                     stopPositionUpdates()
                 }
             }
@@ -260,6 +260,7 @@ class PlayerController(
                     }
 
                     Player.STATE_BUFFERING -> {
+                        startPositionUpdates()
                     }
                 }
             }
