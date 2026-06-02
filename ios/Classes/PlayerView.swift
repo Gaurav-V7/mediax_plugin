@@ -3,7 +3,7 @@ import Flutter
 import UIKit
 import AVKit
 
-public class PlayerView: NSObject, FlutterPlatformView {
+class PlayerView: NSObject, FlutterPlatformView {
     
     private let methodChannel: FlutterMethodChannel
     

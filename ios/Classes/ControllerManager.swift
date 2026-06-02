@@ -1,7 +1,7 @@
 import AVFoundation
 import Flutter
 
-public class ControllerManager {
+class ControllerManager {
     static var controllers = [String: PlayerController]()
     
     static func getController(controllerId: String) -> PlayerController? {

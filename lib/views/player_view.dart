@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -88,6 +89,7 @@ class PlayerViewState extends State<PlayerView> {
   final RxBool isControllerVisible = true.obs;
 
   ResizeMode _resizeMode = ResizeMode.fit;
+  Timer? _mouseHideTimer;
 
   /// Returns the current resize mode of the video player.
   ///
@@ -109,8 +111,25 @@ class PlayerViewState extends State<PlayerView> {
   }
 
   @override
+  void dispose() {
+    _mouseHideTimer?.cancel();
+    super.dispose();
+  }
+
+  void _onMouseEnterOrMove() {
+    showController();
+    _mouseHideTimer?.cancel();
+    _mouseHideTimer = Timer(const Duration(seconds: 3), hideController);
+  }
+
+  void _onMouseExit() {
+    _mouseHideTimer?.cancel();
+    hideController();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Stack(
+    final stack = Stack(
       fit: StackFit.expand,
       children: [
         _playerView(),
@@ -122,6 +141,16 @@ class PlayerViewState extends State<PlayerView> {
             visible: isControllerVisible.value, child: _playerController())),
       ],
     );
+
+    if (Platform.isMacOS) {
+      return MouseRegion(
+        onEnter: (_) => _onMouseEnterOrMove(),
+        onHover: (_) => _onMouseEnterOrMove(),
+        onExit: (_) => _onMouseExit(),
+        child: stack,
+      );
+    }
+    return stack;
   }
 
   Widget _playerView() {
@@ -245,7 +274,6 @@ class PlayerViewState extends State<PlayerView> {
   /// If the controller is currently visible, it will be hidden. If the controller
   /// is currently hidden, it will be shown.
   void toggleControllerVisibility() {
-    debugPrintStack(label: "toggleControllerVisibility");
     isControllerVisible.value = !isControllerVisible.value;
   }
 }

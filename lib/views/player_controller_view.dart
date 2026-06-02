@@ -181,10 +181,11 @@ class PlayerControllerViewState extends State<PlayerControllerView> {
   @override
   Widget build(BuildContext context) {
     return Listener(
-      // onTap: toggleVisibility,
-      onPointerMove: (event) {
-        debugPrintStack(label: "onPointerMove");
-        toggleVisibility();
+      onPointerMove: (_) {
+        if (!widget.playerViewState.isControllerVisible.value) {
+          show();
+        }
+        _setupAutoHide();
       },
       child: Obx(
         () => Container(
