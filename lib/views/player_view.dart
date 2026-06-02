@@ -154,7 +154,7 @@ class PlayerViewState extends State<PlayerView> {
             ..create();
         },
       );
-    } else if (Platform.isIOS) {
+    } else if (Platform.isIOS || Platform.isMacOS) {
       return UiKitView(
         viewType: 'video_view',
         creationParams: creationParams,
@@ -245,6 +245,7 @@ class PlayerViewState extends State<PlayerView> {
   /// If the controller is currently visible, it will be hidden. If the controller
   /// is currently hidden, it will be shown.
   void toggleControllerVisibility() {
+    debugPrintStack(label: "toggleControllerVisibility");
     isControllerVisible.value = !isControllerVisible.value;
   }
 }

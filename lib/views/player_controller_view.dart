@@ -180,8 +180,12 @@ class PlayerControllerViewState extends State<PlayerControllerView> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: toggleVisibility,
+    return Listener(
+      // onTap: toggleVisibility,
+      onPointerMove: (event) {
+        debugPrintStack(label: "onPointerMove");
+        toggleVisibility();
+      },
       child: Obx(
         () => Container(
           color: Colors.black38,

@@ -2,7 +2,7 @@ import Foundation
 import AVFoundation
 import Flutter
 
-class PlayerController: NSObject {
+public class PlayerController: NSObject {
     var player: AVPlayer? { // Make player accessible but still internally managed
         return _player
     }

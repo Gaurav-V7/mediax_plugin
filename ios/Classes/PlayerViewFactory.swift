@@ -1,7 +1,7 @@
 import Flutter
 import UIKit
 
-class PlayerViewFactory: NSObject, FlutterPlatformViewFactory {
+public class PlayerViewFactory: NSObject, FlutterPlatformViewFactory {
     
     private let flutterEngine: FlutterEngine
     

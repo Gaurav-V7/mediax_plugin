@@ -1,4 +1,4 @@
-enum Constants {
+public enum Constants {
     static let MEDIAX = "mediax"
     static let MEDIAX_VIEW = "mediax:view"
     static let VIDEO_VIEW = "video_view"

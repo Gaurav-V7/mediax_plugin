@@ -19,7 +19,6 @@ public class MediaxPlugin: NSObject, FlutterPlugin {
         let flutterEngine = (UIApplication.shared.delegate as? FlutterAppDelegate)?.window?.rootViewController as? FlutterViewController
         let factory = PlayerViewFactory(flutterEngine: flutterEngine!.engine)
         registrar.register(factory, withId: Constants.VIDEO_VIEW)
-        
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {

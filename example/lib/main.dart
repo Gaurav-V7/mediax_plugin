@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -36,8 +38,8 @@ class VideoPlayerScreen extends StatefulWidget {
 }
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
-  late MediaX controller;
-  late PlayerView playerView;
+  MediaX? controller;
+  PlayerView? playerView;
   final GlobalKey<PlayerViewState> playerViewKey = GlobalKey();
 
   final dropDownItems = ["Network", "Local File", "Asset"];
@@ -51,78 +53,115 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight
-    ]);
-    controller = MediaX.init(
-      enableMediaSession: true,
-      dataSource: DataSource.asset('assets/demo.mp4'),
-    );
-    playerView = PlayerView(
-      key: playerViewKey,
-      controller: controller,
-      awakeScreenWhilePlaying: true,
-    );
+    // Only set preferred orientations on mobile platforms (not macOS/Windows)
+    if (Platform.isAndroid || Platform.isIOS) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight
+      ]);
+    }
+    // Only initialize MediaX on supported platforms (Android/iOS)
+    if (Platform.isAndroid || Platform.isIOS || Platform.isMacOS) {
+      controller = MediaX.init(
+        enableMediaSession: true,
+        dataSource: DataSource.asset('assets/demo.mp4'),
+      );
+      playerView = PlayerView(
+        key: playerViewKey,
+        controller: controller!,
+        awakeScreenWhilePlaying: true,
+      );
+
+      controller!.isInitialized.listen((isInitialized) {
+        debugPrint('initializationChanged: $isInitialized');
+        if (isInitialized) {
+          // debugPrint('duration: ${controller.duration.value}');
+        }
+      });
+
+      controller!.duration.listen((duration) {
+        debugPrint('duration: ${controller!.duration.value}');
+      });
+
+      controller!.videoSize.listen((videoSize) {
+        debugPrint('videoSize: ${videoSize.width} ${videoSize.height}');
+      });
+
+      controller!.aspectRatio.listen((ar) {
+        debugPrint('aspectRatio: $aspectRatio');
+        if (ar > 1.333) {
+          aspectRatio.value = ar;
+        }
+      });
+
+      controller!.playbackState.listen((state) {
+        debugPrint('playbackState: ${state.name}');
+      });
+
+      controller!.playbackError.listen((error) {
+        if (error != null) {
+          debugPrint(error.toString());
+          showToast(error.message);
+        }
+      });
+    }
 
     networkUrlTextController.text = sampleStreamUrl;
-
-    controller.isInitialized.listen((isInitialized) {
-      debugPrint('initializationChanged: $isInitialized');
-      if (isInitialized) {
-        // debugPrint('duration: ${controller.duration.value}');
-      }
-    });
-
-    controller.duration.listen((duration) {
-      debugPrint('duration: ${controller.duration.value}');
-    });
-
-    controller.videoSize.listen((videoSize) {
-      debugPrint('videoSize: ${videoSize.width} ${videoSize.height}');
-    });
-
-    controller.aspectRatio.listen((ar) {
-      debugPrint('aspectRatio: $aspectRatio');
-      if (ar > 1.333) {
-        aspectRatio.value = ar;
-      }
-    });
-
-    controller.playbackState.listen((state) {
-      debugPrint('playbackState: ${state.name}');
-    });
-
-    controller.playbackError.listen((error) {
-      if (error != null) {
-        debugPrint(error.toString());
-        showToast(error.message);
-      }
-    });
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    controller?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    // Show unsupported message on macOS
+    if (controller == null || playerView == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('MediaX example app'),
+        ),
+        body: const Center(
+          child: Padding(
+            padding: EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.info_outline, size: 64, color: Colors.blue),
+                SizedBox(height: 16),
+                Text(
+                  'MediaX plugin is not supported on macOS',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Please run this app on Android or iOS to use the video player.',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       body: Obx(
         () => SingleChildScrollView(
           child: Column(
             children: [
               Visibility(
-                visible: !controller.isFullScreen.value,
+                visible: !controller!.isFullScreen.value,
                 child: AppBar(
                   title: const Text('MediaX example app'),
                 ),
               ),
               Visibility(
-                visible: !controller.isFullScreen.value,
+                visible: !controller!.isFullScreen.value,
                 child: Column(
                   children: [
                     const SizedBox(
@@ -140,10 +179,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                           setState(() {
                             currentMode = newValue;
                           });
+                          debugPrint("currentMode: $currentMode");
                           if (currentMode == "Asset") {
-                            controller.setMediaItem(
+                            controller!.setMediaItem(
                                 dataSource:
                                     DataSource.asset("assets/demo.mp4"));
+                            controller!.seekTo(0);
                           }
                         }),
                     Visibility(
@@ -172,13 +213,17 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                       visible: currentMode == "Local File",
                       child: ElevatedButton(
                           onPressed: () async {
-                            final picker = await ImagePicker()
-                                .pickVideo(source: ImageSource.gallery);
+                            try {
+                              final picker = await ImagePicker()
+                                  .pickVideo(source: ImageSource.gallery);
 
-                            if (picker != null) {
-                              controller.setMediaItem(
-                                  dataSource: DataSource.file(picker.path),
-                                  autoplay: false);
+                              if (picker != null) {
+                                controller!.setMediaItem(
+                                    dataSource: DataSource.file(picker.path),
+                                    autoplay: false);
+                              }
+                            } catch (e) {
+                              debugPrint("Error picking file: $e");
                             }
                           },
                           child: const Text("Pick file")),
@@ -189,7 +234,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   ],
                 ),
               ),
-              frameLayout(child: playerView),
+              frameLayout(child: playerView!),
             ],
           ),
         ),
@@ -198,17 +243,20 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   }
 
   void setMediaItem(String value) {
-    controller.setMediaItem(dataSource: DataSource.network(value));
+    controller?.setMediaItem(dataSource: DataSource.network(value));
   }
 
   Widget frameLayout({required Widget child}) {
+    if (controller == null) {
+      return const SizedBox.shrink();
+    }
     final mediaQuery = MediaQuery.of(context);
     final screenAspectRatio = (mediaQuery.size.width / mediaQuery.size.height);
     return SizedBox(
       width: double.infinity,
-      height: controller.isFullScreen.value == false ? 300 : null,
+      height: controller!.isFullScreen.value == false ? 300 : null,
       child: AspectRatio(
-        aspectRatio: controller.isFullScreen.value
+        aspectRatio: controller!.isFullScreen.value
             ? screenAspectRatio
             : aspectRatio.value,
         child: child,

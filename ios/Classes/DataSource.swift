@@ -1,7 +1,7 @@
 import AVKit
 import Flutter
 
-class DataSource {
+public class DataSource {
     private let uri: String
     private let type: String
     

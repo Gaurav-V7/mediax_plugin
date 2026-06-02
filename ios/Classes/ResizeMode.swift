@@ -1,4 +1,4 @@
-enum ResizeMode: Int {
+public enum ResizeMode: Int {
     case fit = 0
     case stretch
     case crop
