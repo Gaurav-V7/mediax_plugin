@@ -39,6 +39,7 @@ enum Constants {
     static let CONTROLLER_MANAGER_ERROR_DOMAIN = "ControllerManager"
 
     static let SET_RESIZE_MODE = "setResizeMode"
+    static let TOGGLE_FULLSCREEN = "toggleFullscreen"
     
     static let ON_PLAYBACK_STATE_CHANGED = "onPlaybackStateChanged"
     static let ON_PLAYBACK_ERROR = "onPlaybackError"

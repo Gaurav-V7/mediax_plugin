@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -180,14 +181,16 @@ class PlayerControllerViewState extends State<PlayerControllerView> {
 
   @override
   Widget build(BuildContext context) {
-    return Listener(
-      onPointerMove: (_) {
-        if (!widget.playerViewState.isControllerVisible.value) {
-          show();
-        }
-        _setupAutoHide();
-      },
-      child: Obx(
+    return GestureDetector(
+      onTap: (Platform.isAndroid || Platform.isIOS) ? toggleVisibility : null,
+      child: Listener(
+        onPointerMove: (_) {
+          if (!widget.playerViewState.isControllerVisible.value) {
+            show();
+          }
+          _setupAutoHide();
+        },
+        child: Obx(
         () => Container(
           color: Colors.black38,
           padding: const EdgeInsets.all(10.0),
@@ -313,11 +316,7 @@ class PlayerControllerViewState extends State<PlayerControllerView> {
                           color: Colors.white,
                         )),
                     extraControlButton(
-                        onPressed: () async {
-                          hide();
-                          playerController.isFullScreen.value =
-                              !playerController.isFullScreen.value;
-                        },
+                        onPressed: toggleFullscreen,
                         icon: const Icon(
                           Icons.fullscreen_rounded,
                           color: Colors.white,
@@ -329,7 +328,17 @@ class PlayerControllerViewState extends State<PlayerControllerView> {
           ),
         ),
       ),
-    );
+    ),
+  );
+  }
+
+  void toggleFullscreen() {
+    if (Platform.isMacOS) {
+      widget.playerViewState.toggleFullscreen();
+    } else {
+      hide();
+    }
+    playerController.isFullScreen.value = !playerController.isFullScreen.value;
   }
 
   void toggleResizeMode() {

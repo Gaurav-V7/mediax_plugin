@@ -62,6 +62,9 @@ class PlayerView: NSObject {
         case Constants.SET_RESIZE_MODE:
             setResizeMode(resizeMode: call.arguments as! Int)
             result(nil)
+        case Constants.TOGGLE_FULLSCREEN:
+            playerView?.window?.toggleFullScreen(nil)
+            result(nil)
         default:
             result(FlutterMethodNotImplemented)
         }
